@@ -1,4 +1,4 @@
-package com.udacity.asteroidradar.api
+package com.udacity.asteroidradar.repo
 
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.Constants
@@ -8,18 +8,19 @@ import java.util.*
 
 interface NasaApiDataConverter {
 
-    fun dateString(date: Date) : String
+    fun formatDate(date: Date) : String
+
     fun asteroidsFromJson(jsonObject: JSONObject): List<Asteroid>
 
 }
 
-fun createNasaApiDataConverter() : NasaApiDataConverter = NasApiDataConverterImpl()
+fun createNasaApiDataConverter() : NasaApiDataConverter = NasaApiDataConverterImpl()
 
-class NasApiDataConverterImpl : NasaApiDataConverter {
+class NasaApiDataConverterImpl : NasaApiDataConverter {
 
     private val dateFormat = SimpleDateFormat(Constants.API_QUERY_DATE_FORMAT, Locale.getDefault())
 
-    override fun dateString(date: Date): String = dateFormat.format(date)
+    override fun formatDate(date: Date): String = dateFormat.format(date)
 
     override fun asteroidsFromJson(jsonObject: JSONObject): List<Asteroid> {
 

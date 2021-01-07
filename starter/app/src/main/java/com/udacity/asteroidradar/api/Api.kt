@@ -37,23 +37,18 @@ object NasaApi {
         retrofit.create(NasaService::class.java)
     }
 
-    private val dataConverter = createNasaApiDataConverter()
-
-    suspend fun getAsteroids(startDate: Date, endDate: Date): List<Asteroid> {
-
-        val startDateString = dataConverter.dateString(startDate)
-        val endDateString = dataConverter.dateString(endDate)
+    suspend fun getAsteroids(startDate: String, endDate: String): JSONObject? {
 
         return try {
-            val response = service.getNearEarthObjectData(startDateString, endDateString, API_KEY)
+            val response = service.getNearEarthObjectData(startDate, endDate, API_KEY)
             if (response.isSuccessful) {
                 val jsonString = response.body()!!
-                dataConverter.asteroidsFromJson(JSONObject(jsonString))
+                JSONObject(jsonString)
             } else {
-                emptyList()
+                null
             }
         } catch (e: Exception) {
-            emptyList()
+            null
         }
     }
 
