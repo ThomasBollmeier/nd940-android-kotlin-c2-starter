@@ -1,20 +1,34 @@
 package com.udacity.asteroidradar.main
 
+import android.app.Application
 import android.util.Log
-import androidx.lifecycle.ViewModel
-import com.udacity.asteroidradar.Constants
-import com.udacity.asteroidradar.api.NasaApi
+import androidx.lifecycle.*
+import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.repo.AsteroidRepository
-import kotlinx.coroutines.runBlocking
-import java.util.*
+import kotlinx.coroutines.launch
 
-class MainViewModel : ViewModel() {
+class MainViewModelFactory(
+        private val application: Application) : ViewModelProvider.Factory {
+    @Suppress("unchecked_cast")
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
+            return MainViewModel(application) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
+    }
+}
+
+class MainViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val _asteroids = MutableLiveData<List<Asteroid>>(emptyList())
+    val asteroids : LiveData<List<Asteroid>>
+        get() = _asteroids
 
     init {
-        runBlocking {
 
-            val asteroids = AsteroidRepository.getAsteroids()
-            for (asteroid in asteroids) {
+        viewModelScope.launch {
+            _asteroids.value = AsteroidRepository.getAsteroids()
+            for (asteroid in _asteroids.value!!) {
                 Log.d("MainViewModel", "Asteroid: $asteroid")
             }
         }

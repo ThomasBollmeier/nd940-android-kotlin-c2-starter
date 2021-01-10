@@ -1,7 +1,6 @@
 package com.udacity.asteroidradar.repo
 
 import com.udacity.asteroidradar.Asteroid
-import com.udacity.asteroidradar.Constants
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
@@ -16,9 +15,11 @@ interface NasaApiDataConverter {
 
 fun createNasaApiDataConverter() : NasaApiDataConverter = NasaApiDataConverterImpl()
 
+const val API_DATE_FORMAT = "yyyy-MM-dd"
+
 class NasaApiDataConverterImpl : NasaApiDataConverter {
 
-    private val dateFormat = SimpleDateFormat(Constants.API_QUERY_DATE_FORMAT, Locale.getDefault())
+    private val dateFormat = SimpleDateFormat(API_DATE_FORMAT, Locale.getDefault())
 
     override fun formatDate(date: Date): String = dateFormat.format(date)
 
