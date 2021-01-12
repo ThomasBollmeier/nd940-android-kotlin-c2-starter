@@ -18,8 +18,11 @@ interface NasaService {
             @Query("start_date") startDate: String,
             @Query("end_date") endDate: String,
             @Query("api_key") apiKey: String
-
     ): Response<String>
+
+    @GET("planetary/apod")
+    suspend fun getAstronomyPicOfDay(@Query("api_key") apiKey: String): Response<String>
+
 }
 
 object NasaApi {
@@ -41,6 +44,21 @@ object NasaApi {
 
         return try {
             val response = service.getNearEarthObjectData(startDate, endDate, API_KEY)
+            if (response.isSuccessful) {
+                val jsonString = response.body()!!
+                JSONObject(jsonString)
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    suspend fun getAstronomyPicOfDay() : JSONObject? {
+
+        return try {
+            val response = service.getAstronomyPicOfDay(API_KEY)
             if (response.isSuccessful) {
                 val jsonString = response.body()!!
                 JSONObject(jsonString)

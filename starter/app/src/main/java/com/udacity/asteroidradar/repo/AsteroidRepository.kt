@@ -1,20 +1,12 @@
 package com.udacity.asteroidradar.repo
 
-import androidx.lifecycle.LiveData
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.Constants
 import java.util.*
 
-interface AsteroidDataSource {
-
-    suspend fun getAsteroidsByDate(startDate: Date, endDate: Date) : List<Asteroid>
-
-}
-
 object AsteroidRepository {
 
-    private val apiDataSource: AsteroidDataSource = AsteroidApiDataSource()
-    private val activeDataSource = apiDataSource
+    private val apiDataSource = AsteroidApiDataSource()
 
     suspend fun getAsteroids() : List<Asteroid> {
 
@@ -23,8 +15,10 @@ object AsteroidRepository {
         startDate.time = endDate.time
         startDate.add(Calendar.DAY_OF_MONTH, -Constants.DEFAULT_END_DATE_DAYS)
 
-        return activeDataSource.getAsteroidsByDate(startDate.time, endDate.time)
+        return apiDataSource.getAsteroidsByDate(startDate.time, endDate.time)
 
     }
+
+    suspend fun getImageOfDay() = apiDataSource.getImageOfDay()
 
 }

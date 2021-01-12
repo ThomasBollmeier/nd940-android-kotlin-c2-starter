@@ -4,11 +4,11 @@ import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.api.NasaApi
 import java.util.*
 
-class AsteroidApiDataSource : AsteroidDataSource {
+class AsteroidApiDataSource {
 
     private val dataConverter = createNasaApiDataConverter()
 
-    override suspend fun getAsteroidsByDate(startDate: Date, endDate: Date): List<Asteroid> {
+    suspend fun getAsteroidsByDate(startDate: Date, endDate: Date): List<Asteroid> {
 
         val startDateStr = dataConverter.formatDate(startDate)
         val endDateStr = dataConverter.formatDate(endDate)
@@ -20,5 +20,17 @@ class AsteroidApiDataSource : AsteroidDataSource {
         } else {
             emptyList()
         }
+    }
+
+    suspend fun getImageOfDay() : ImageData {
+
+        val jsonObject = NasaApi.getAstronomyPicOfDay()
+
+        return if (jsonObject != null) {
+            dataConverter.imageDataFromJson(jsonObject)
+        } else {
+            ImageData()
+        }
+
     }
 }

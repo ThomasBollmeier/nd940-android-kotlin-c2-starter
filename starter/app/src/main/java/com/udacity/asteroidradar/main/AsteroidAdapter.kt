@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.databinding.AsteroidListItemBinding
 
-class AsteroidAdapter : ListAdapter<Asteroid, AsteroidAdapter.ViewHolder>(AsteroidDiffCallback()) {
+class AsteroidAdapter(private val clickListener: AsteroidClickListener) : ListAdapter<Asteroid, AsteroidAdapter.ViewHolder>(AsteroidDiffCallback()) {
 
     class ViewHolder(private val binding: AsteroidListItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
@@ -21,8 +21,9 @@ class AsteroidAdapter : ListAdapter<Asteroid, AsteroidAdapter.ViewHolder>(Astero
             }
         }
 
-        fun bind(asteroid: Asteroid) {
+        fun bind(asteroid: Asteroid, clickListener: AsteroidClickListener) {
             binding.asteroid = asteroid
+            binding.clickListener = clickListener
             binding.executePendingBindings()
         }
 
@@ -34,7 +35,7 @@ class AsteroidAdapter : ListAdapter<Asteroid, AsteroidAdapter.ViewHolder>(Astero
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val asteroid = getItem(position)
-        holder.bind(asteroid)
+        holder.bind(asteroid, clickListener)
     }
 
 }
@@ -50,3 +51,7 @@ class AsteroidDiffCallback : DiffUtil.ItemCallback<Asteroid>() {
     }
 
 }
+
+class AsteroidClickListener(private val listenerFn: (Asteroid) -> Unit) {
+    fun onClick(asteroid: Asteroid) = listenerFn(asteroid)
+} 

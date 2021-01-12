@@ -5,15 +5,19 @@ import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
 
+data class ImageData(val url: String = "", val title: String = "")
+
 interface NasaApiDataConverter {
 
-    fun formatDate(date: Date) : String
+    fun formatDate(date: Date): String
 
     fun asteroidsFromJson(jsonObject: JSONObject): List<Asteroid>
 
+    fun imageDataFromJson(jsonObject: JSONObject): ImageData
+
 }
 
-fun createNasaApiDataConverter() : NasaApiDataConverter = NasaApiDataConverterImpl()
+fun createNasaApiDataConverter(): NasaApiDataConverter = NasaApiDataConverterImpl()
 
 const val API_DATE_FORMAT = "yyyy-MM-dd"
 
@@ -60,5 +64,20 @@ class NasaApiDataConverterImpl : NasaApiDataConverter {
         return ret.sortedByDescending { it.closeApproachDate }
 
     }
+
+    override fun imageDataFromJson(jsonObject: JSONObject): ImageData {
+
+        val mediaType = jsonObject.getString("media_type")
+
+        return if (mediaType == "image") {
+            val url = jsonObject.getString("url")
+            val title = jsonObject.getString("title")
+            ImageData(url, title)
+        } else {
+            ImageData()
+        }
+
+    }
+
 
 }

@@ -1,7 +1,6 @@
 package com.udacity.asteroidradar.main
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.*
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.repo.AsteroidRepository
@@ -20,17 +19,26 @@ class MainViewModelFactory(
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
+    private val _imageOfDayUrl = MutableLiveData<String>("")
+    val imageOfDayUrl : LiveData<String>
+        get() = _imageOfDayUrl
+
+    private val _imageOfDayTitle = MutableLiveData<String>("")
+    val imageOfDayTitle : LiveData<String>
+        get() = _imageOfDayTitle
+
     private val _asteroids = MutableLiveData<List<Asteroid>>(emptyList())
     val asteroids : LiveData<List<Asteroid>>
         get() = _asteroids
 
     init {
-
         viewModelScope.launch {
+
+            val imageData = AsteroidRepository.getImageOfDay()
+            _imageOfDayUrl.value = imageData.url
+            _imageOfDayTitle.value = imageData.title
             _asteroids.value = AsteroidRepository.getAsteroids()
-            for (asteroid in _asteroids.value!!) {
-                Log.d("MainViewModel", "Asteroid: $asteroid")
-            }
+
         }
     }
 
