@@ -2,9 +2,10 @@ package com.udacity.asteroidradar.repo
 
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.Constants
+import com.udacity.asteroidradar.database.AsteroidsDb
 import java.util.*
 
-object AsteroidRepository {
+class AsteroidRepository(private var database: AsteroidsDb) {
 
     private val apiDataSource = AsteroidApiDataSource()
 
