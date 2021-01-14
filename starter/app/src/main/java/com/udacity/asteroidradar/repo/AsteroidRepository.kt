@@ -2,14 +2,15 @@ package com.udacity.asteroidradar.repo
 
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.Constants
-import com.udacity.asteroidradar.database.AsteroidsDb
+import com.udacity.asteroidradar.database.AsteroidsDatabase
 import java.util.*
 
-class AsteroidRepository(private var database: AsteroidsDb) {
+class AsteroidRepository(private var database: AsteroidsDatabase) {
 
     private val apiDataSource = AsteroidApiDataSource()
+    private val dbDataSource = AsteroidDbDataSource(database.asteroidDao())
 
-    suspend fun getAsteroids() : List<Asteroid> {
+    suspend fun fetchAsteroids() : List<Asteroid> {
 
         val endDate = Calendar.getInstance()
         val startDate = Calendar.getInstance()
@@ -20,6 +21,6 @@ class AsteroidRepository(private var database: AsteroidsDb) {
 
     }
 
-    suspend fun getImageOfDay() = apiDataSource.getImageOfDay()
+    suspend fun fetchImageOfDay() = apiDataSource.getImageOfDay()
 
 }
