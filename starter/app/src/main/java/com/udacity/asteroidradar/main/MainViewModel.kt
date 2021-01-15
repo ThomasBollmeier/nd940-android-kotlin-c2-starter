@@ -20,6 +20,8 @@ class MainViewModelFactory(
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
+    private val repository = AsteroidRepository(AsteroidsDatabase.getInstance(application))
+
     private val _imageOfDayUrl = MutableLiveData<String>("")
     val imageOfDayUrl : LiveData<String>
         get() = _imageOfDayUrl
@@ -28,11 +30,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val imageOfDayTitle : LiveData<String>
         get() = _imageOfDayTitle
 
-    private val _asteroids = MutableLiveData<List<Asteroid>>(emptyList())
-    val asteroids : LiveData<List<Asteroid>>
-        get() = _asteroids
-
-    private val repository = AsteroidRepository(AsteroidsDatabase.getInstance(application))
+    val asteroids = repository.asteroids
 
     init {
         viewModelScope.launch {
@@ -41,8 +39,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             _imageOfDayUrl.value = imageData.url
             _imageOfDayTitle.value = imageData.title
 
-            _asteroids.value = repository.fetchAsteroids()
-
+            repository.refreshAsteroids()
         }
     }
 

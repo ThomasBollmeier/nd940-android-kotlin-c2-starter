@@ -1,12 +1,13 @@
 package com.udacity.asteroidradar.database
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 
 @Dao
 interface AsteroidDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(vararg asteroids: AsteroidEntity)
+    fun insert(vararg asteroids: AsteroidEntity)
 
     @Query("""
 SELECT 
@@ -17,9 +18,9 @@ WHERE
     close_approach_date >= :startDate AND 
     close_approach_date <= :endDate
     """)
-    suspend fun readByDates(startDate: String, endDate: String) : List<AsteroidEntity>
+    fun readByDates(startDate: String, endDate: String) : LiveData<List<AsteroidEntity>>
 
     @Delete
-    suspend fun delete(asteroid: AsteroidEntity)
+    fun delete(asteroid: AsteroidEntity)
 
 }

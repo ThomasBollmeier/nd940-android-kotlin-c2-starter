@@ -8,7 +8,7 @@ class AsteroidApiDataSource {
 
     private val dataConverter = createNasaApiDataConverter()
 
-    suspend fun getAsteroidsByDate(startDate: Date, endDate: Date): List<Asteroid> {
+    suspend fun fetchAsteroidsByDates(startDate: Date, endDate: Date): List<Asteroid> {
 
         val startDateStr = dataConverter.formatDate(startDate)
         val endDateStr = dataConverter.formatDate(endDate)
@@ -22,7 +22,7 @@ class AsteroidApiDataSource {
         }
     }
 
-    suspend fun getImageOfDay() : ImageData {
+    suspend fun fetchImageOfDay() : ImageData {
 
         val jsonObject = NasaApi.getAstronomyPicOfDay()
 
