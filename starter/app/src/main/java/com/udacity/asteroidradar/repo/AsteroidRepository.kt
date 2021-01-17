@@ -19,7 +19,10 @@ class AsteroidRepository(private var database: AsteroidsDatabase) {
     suspend fun refreshAsteroids() {
         withContext(Dispatchers.IO) {
             val today = Calendar.getInstance()
-            val asteroids = apiDataSource.fetchAsteroidsByDates(today.time, today.time)
+            val endDate = Calendar.getInstance()
+            endDate.time = today.time
+            endDate.add(Calendar.DAY_OF_MONTH, 7)
+            val asteroids = apiDataSource.fetchAsteroidsByDates(today.time, endDate.time)
             dbDataSource.saveAsteroids(asteroids)
         }
     }

@@ -17,6 +17,8 @@ FROM
 WHERE 
     close_approach_date >= :startDate AND 
     close_approach_date <= :endDate
+ORDER BY
+    close_approach_date DESC
     """)
     fun readByDates(startDate: String, endDate: String) : LiveData<List<AsteroidEntity>>
 
