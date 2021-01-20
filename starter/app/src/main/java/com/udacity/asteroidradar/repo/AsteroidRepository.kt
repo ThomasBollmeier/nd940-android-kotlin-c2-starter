@@ -1,9 +1,7 @@
 package com.udacity.asteroidradar.repo
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.udacity.asteroidradar.Asteroid
-import com.udacity.asteroidradar.Constants
 import com.udacity.asteroidradar.database.AsteroidsDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -14,7 +12,11 @@ class AsteroidRepository(private var database: AsteroidsDatabase) {
     private val apiDataSource = AsteroidApiDataSource()
     private val dbDataSource = AsteroidDbDataSource(database.asteroidDao())
 
-    val asteroids = readRecentAsteroids()
+    private var filter = AsteroidFilterWeek()
+
+    private var _asteroids = readAsteroids()
+    val asteroids: LiveData<List<Asteroid>>
+        get() = _asteroids
 
     suspend fun refreshAsteroids() {
         withContext(Dispatchers.IO) {
@@ -29,15 +31,6 @@ class AsteroidRepository(private var database: AsteroidsDatabase) {
 
     suspend fun fetchImageOfDay() = apiDataSource.fetchImageOfDay()
 
-    private fun readRecentAsteroids(): LiveData<List<Asteroid>> {
-
-        val today = Calendar.getInstance()
-        val sevenDaysBefore = Calendar.getInstance()
-        sevenDaysBefore.time = today.time
-        sevenDaysBefore.add(Calendar.DAY_OF_MONTH, -7)
-
-        return dbDataSource.readAsteroidsByDates(sevenDaysBefore.time, today.time)
-    }
-
+    private fun readAsteroids() = dbDataSource.readAsteroids(filter)
 
 }

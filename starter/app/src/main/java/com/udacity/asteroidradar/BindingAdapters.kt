@@ -4,6 +4,15 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 
+@BindingAdapter("imageOfDayTitle")
+fun bindImageOfDayTitle(textView: TextView, title: String) {
+    if (!title.isNullOrBlank()) {
+        textView.text = title
+    } else {
+        textView.setText(R.string.image_of_the_day)
+    }
+}
+
 @BindingAdapter("statusIcon")
 fun bindAsteroidStatusImage(imageView: ImageView, isHazardous: Boolean) {
     if (isHazardous) {

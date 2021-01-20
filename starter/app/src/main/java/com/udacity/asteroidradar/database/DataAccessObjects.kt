@@ -14,6 +14,24 @@ SELECT
     *
 FROM 
     asteroids 
+    """)
+    fun readAll() : LiveData<List<AsteroidEntity>>
+
+    @Query("""
+SELECT 
+    *
+FROM 
+    asteroids 
+WHERE 
+    close_approach_date = :date
+    """)
+    fun readByDate(date: String) : LiveData<List<AsteroidEntity>>
+
+    @Query("""
+SELECT 
+    *
+FROM 
+    asteroids 
 WHERE 
     close_approach_date >= :startDate AND 
     close_approach_date <= :endDate
