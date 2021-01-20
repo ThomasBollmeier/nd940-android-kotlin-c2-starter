@@ -11,7 +11,7 @@ class AsteroidDbDataSource(private val dao: AsteroidDao) {
 
     private val converter = createAsteroidsDbDataConverter()
 
-    fun readAsteroids(filter: AsteroidFilter): LiveData<List<Asteroid>> {
+    fun readAsteroids(filter: AsteroidFilter): List<Asteroid> {
 
         val (start, end) = filter.getTimeInterval()
 
@@ -27,24 +27,11 @@ class AsteroidDbDataSource(private val dao: AsteroidDao) {
             dao.readAll()
         }
 
-        return Transformations.map(entities) { asteroidEntities ->
-            asteroidEntities.map { converter.fromEntity(it) }
-        }
+        return entities.map { converter.fromEntity(it) }
 
     }
 
-    fun readAsteroidsByDates(start: Date, end: Date): LiveData<List<Asteroid>> {
-
-        val startDate = converter.formatDate(start)
-        val endDate = converter.formatDate(end)
-
-        return Transformations.map(dao.readByDates(startDate, endDate)) { asteroidEntities ->
-            asteroidEntities.map { converter.fromEntity(it) }
-        }
-
-    }
-
-    suspend fun saveAsteroids(asteroids: List<Asteroid>) {
+    fun saveAsteroids(asteroids: List<Asteroid>) {
 
         val asteroidEntities = asteroids.map { converter.toEntity(it) }.toTypedArray()
         dao.insert(*asteroidEntities)

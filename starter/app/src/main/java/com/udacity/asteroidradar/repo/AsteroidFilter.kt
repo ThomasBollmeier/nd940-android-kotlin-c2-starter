@@ -8,16 +8,50 @@ interface AsteroidFilter {
     fun getTimeInterval(): TimeInterval
 }
 
-class AsteroidFilterWeek() : AsteroidFilter {
+enum class AsteroidFilterType {
+    WEEK,
+    TODAY,
+    SAVED
+}
 
-    override fun getTimeInterval(): TimeInterval {
+object AsteroidFilterFactory {
 
-        val today = Calendar.getInstance()
-        val sevenDaysBefore = Calendar.getInstance()
-        sevenDaysBefore.time = today.time
-        sevenDaysBefore.add(Calendar.DAY_OF_MONTH, -7)
+    fun createFilter(filterType: AsteroidFilterType) =
+        when (filterType) {
+            AsteroidFilterType.WEEK -> FilterWeek()
+            AsteroidFilterType.TODAY -> FilterToday()
+            AsteroidFilterType.SAVED -> FilterAll()
+        }
 
-        return TimeInterval(sevenDaysBefore.time, today.time)
+    private class FilterWeek() : AsteroidFilter {
+
+        override fun getTimeInterval(): TimeInterval {
+
+            val today = Calendar.getInstance()
+            val sevenDaysBefore = Calendar.getInstance()
+            sevenDaysBefore.time = today.time
+            sevenDaysBefore.add(Calendar.DAY_OF_MONTH, -7)
+
+            return TimeInterval(sevenDaysBefore.time, today.time)
+        }
+
     }
 
+    private class FilterToday() : AsteroidFilter {
+
+        override fun getTimeInterval(): TimeInterval {
+
+            val today = Calendar.getInstance()
+
+            return TimeInterval(today.time, today.time)
+        }
+
+    }
+
+    private class FilterAll() : AsteroidFilter {
+
+        override fun getTimeInterval(): TimeInterval = TimeInterval(null, null)
+
+    }
 }
+

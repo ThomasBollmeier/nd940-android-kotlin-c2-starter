@@ -9,6 +9,8 @@ import androidx.navigation.fragment.findNavController
 import com.squareup.picasso.Picasso
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
+import com.udacity.asteroidradar.repo.AsteroidFilterType
+import java.lang.RuntimeException
 import java.lang.System.load
 
 class MainFragment : Fragment() {
@@ -56,6 +58,14 @@ class MainFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        viewModel.setFilter(when (item.itemId) {
+            R.id.menu_item_week -> AsteroidFilterType.WEEK
+            R.id.menu_item_today -> AsteroidFilterType.TODAY
+            R.id.menu_item_saved -> AsteroidFilterType.SAVED
+            else -> throw IllegalArgumentException("Unknown filter type")
+        })
+
         return true
     }
 }

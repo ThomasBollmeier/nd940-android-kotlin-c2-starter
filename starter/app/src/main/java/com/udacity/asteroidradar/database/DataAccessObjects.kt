@@ -14,8 +14,10 @@ SELECT
     *
 FROM 
     asteroids 
+ORDER BY
+    close_approach_date DESC
     """)
-    fun readAll() : LiveData<List<AsteroidEntity>>
+    fun readAll() : List<AsteroidEntity>
 
     @Query("""
 SELECT 
@@ -25,7 +27,7 @@ FROM
 WHERE 
     close_approach_date = :date
     """)
-    fun readByDate(date: String) : LiveData<List<AsteroidEntity>>
+    fun readByDate(date: String) : List<AsteroidEntity>
 
     @Query("""
 SELECT 
@@ -38,7 +40,7 @@ WHERE
 ORDER BY
     close_approach_date DESC
     """)
-    fun readByDates(startDate: String, endDate: String) : LiveData<List<AsteroidEntity>>
+    fun readByDates(startDate: String, endDate: String) : List<AsteroidEntity>
 
     @Delete
     fun delete(asteroid: AsteroidEntity)
