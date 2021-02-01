@@ -20,14 +20,32 @@ class AsteroidRepository(private var database: AsteroidsDatabase) {
 
     suspend fun refreshAsteroids() {
         withContext(Dispatchers.IO) {
+
             val today = Calendar.getInstance()
-            val endDate = Calendar.getInstance()
-            endDate.time = today.time
-            endDate.add(Calendar.DAY_OF_MONTH, 7)
-            val asteroids = apiDataSource.fetchAsteroidsByDates(today.time, endDate.time)
-            dbDataSource.saveAsteroids(asteroids)
+
+            fetchAndSaveNextSevenDaysData(today = today.time)
+            deleteOldAsteroids(today = today.time)
+
             setFilter(AsteroidFilterType.WEEK)
         }
+    }
+
+    private fun deleteOldAsteroids(today: Date) {
+
+        val deleteBefore = Calendar.getInstance()
+        deleteBefore.time = today
+        deleteBefore.add(Calendar.DAY_OF_MONTH, -7)
+
+        dbDataSource.deleteBeforeDate(deleteBefore.time)
+    }
+
+    private suspend fun fetchAndSaveNextSevenDaysData(today: Date) {
+
+        val endDate = Calendar.getInstance()
+        endDate.time = today
+        endDate.add(Calendar.DAY_OF_MONTH, 7)
+        val asteroids = apiDataSource.fetchAsteroidsByDates(today, endDate.time)
+        dbDataSource.saveAsteroids(asteroids)
     }
 
     suspend fun fetchImageOfDay() = apiDataSource.fetchImageOfDay()

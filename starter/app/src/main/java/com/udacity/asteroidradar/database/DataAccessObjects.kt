@@ -35,6 +35,16 @@ SELECT
 FROM 
     asteroids 
 WHERE 
+    close_approach_date < :date
+    """)
+    fun readBeforeDate(date: String) : List<AsteroidEntity>
+
+    @Query("""
+SELECT 
+    *
+FROM 
+    asteroids 
+WHERE 
     close_approach_date >= :startDate AND 
     close_approach_date <= :endDate
 ORDER BY
@@ -43,6 +53,6 @@ ORDER BY
     fun readByDates(startDate: String, endDate: String) : List<AsteroidEntity>
 
     @Delete
-    fun delete(asteroid: AsteroidEntity)
+    fun delete(asteroids: List<AsteroidEntity>)
 
 }

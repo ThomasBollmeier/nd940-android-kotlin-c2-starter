@@ -31,6 +31,12 @@ class AsteroidDbDataSource(private val dao: AsteroidDao) {
 
     }
 
+    fun deleteBeforeDate(date: Date) {
+
+        val entities = dao.readBeforeDate(converter.formatDate(date))
+        dao.delete(entities)
+    }
+
     fun saveAsteroids(asteroids: List<Asteroid>) {
 
         val asteroidEntities = asteroids.map { converter.toEntity(it) }.toTypedArray()
