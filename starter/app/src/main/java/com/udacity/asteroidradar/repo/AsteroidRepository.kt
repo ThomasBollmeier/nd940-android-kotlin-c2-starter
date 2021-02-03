@@ -56,5 +56,4 @@ class AsteroidRepository(private var database: AsteroidsDatabase) {
             _asteroids.postValue(dbDataSource.readAsteroids(filter))
         }
     }
-
 }
