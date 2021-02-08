@@ -28,11 +28,11 @@ object AsteroidFilterFactory {
         override fun getTimeInterval(): TimeInterval {
 
             val today = Calendar.getInstance()
-            val sevenDaysBefore = Calendar.getInstance()
-            sevenDaysBefore.time = today.time
-            sevenDaysBefore.add(Calendar.DAY_OF_MONTH, -7)
+            val endDate = Calendar.getInstance()
+            endDate.time = today.time
+            endDate.add(Calendar.DAY_OF_MONTH, 7)
 
-            return TimeInterval(sevenDaysBefore.time, today.time)
+            return TimeInterval(today.time, endDate.time)
         }
 
     }

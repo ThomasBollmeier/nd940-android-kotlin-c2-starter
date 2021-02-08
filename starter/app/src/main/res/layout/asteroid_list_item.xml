@@ -58,6 +58,7 @@
             android:id="@+id/img_hazardous"
             statusIcon="@{asteroid.potentiallyHazardous}"
             statusIconDescription="@{asteroid.potentiallyHazardous}"
+            android:contentDescription="@string/potentially_hazardous_asteroid_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|end"
